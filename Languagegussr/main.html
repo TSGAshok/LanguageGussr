@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            background-color: rgb(26, 24, 24);
+        }
+        h3 {
+            color:white;
+        }
+        #languagecontainer {
+            width:500px;
+            height:200px;
+            margin-top: 245px;
+            margin-left:455px;
+            background-color: rgb(224, 238, 233);
+            align-items: center;
+            text-align: center;
+            
+            font-family:'Courier New', Courier, monospace;
+            font-size: 50px;
+
+
+        }
+        #countryForm {
+            margin-top: 15px;
+            margin-left:555px;
+        }
+
+        
+
+    </style>
+</head>
+<body>
+
+    <div id="languagecontainer">
+        
+        
+    </div>
+    <form id="countryForm">
+        <h3 for="country">Which Country is this language from?</h3><br>
+        <input type="text" style="margin-left:70px;" id="country" name="country" value=""><br>
+        <input type="submit" style="margin-left:115px;"  value="Submit">
+    </form> 
+</center>
+    <script>
+        // Define a variable to hold the user's country
+        let usercountry = "";
+        const wordTranslations = {
+  "France": ["Bonjour", "pluie", "sud", "nord", "ville", "voiture", "merci", "chien", "famille", "soleil"],
+  "Spain": ["Hola", "tráfico", "calle", "dirección", "ciudad", "playa", "gracias", "perro", "amigo", "sol"],
+  "Russia": ["Привет", "Спасибо", "Пожалуйста", "Да", "Нет", "молоко", "собака", "дом", "рука", "любовь"],
+  "Italy": ["montagna", "albero", "Locale", "traffico", "cane", "grazie", "famiglia", "sole", "mare", "pioggia"],
+  "Bulgaria":["планина", "точно", "посока", "наляво", "куче", "благодаря", "семейство", "плаж", "слънце", "дъжд"],
+  "Sweden": ["Hej", "tack", "vän", "sol", "regn", "sjö", "hus", "sjö", "skog", "resa"],
+  "Finland": ["Hei", "kiitos", "ystävä", "aurinko", "sade", "koira", "talvi", "järvi", "metsä", "kieli"],
+  "Norway": ["Hei", "takk", "venn", "gå", "menn", "katt", "innsjø", "fjell", "hav", "natur"],
+  "Denmark": ["løb", "tak", "ven", "sol", "regn", "hund", "familie", "strand", "mad", "glæde"],
+  "Netherlands": ["Hallo", "dank je", "vriend", "zon", "regen", "hond", "familie", "strand", "fiets", "boot"],
+  "Romania": ["Salut", "mulțumesc", "prieten", "soare", "ploaie", "câine", "familie", "munte", "lac", "drum"],
+  "Slovakia": ["Ahoj", "ďakujem", "priateľ", "slnečný", "dážď", "pes", "rodina", "horský", "jazero", "cesta"],
+  "Croatia": ["Bok", "hvala", "prijatelj", "sunce", "kiša", "pas", "obitelj", "more", "planina", "voće"],
+  "Greece": ["Γεια σου", "ευχαριστώ", "φίλος", "ηλιος", "βροχή", "σκύλος", "οικογένεια", "θάλασσα", "βουνό", "ταξίδι"],
+  "Slovenia": ["Živjo", "hvala", "prijatelj", "sonce", "dež", "pes", "družina", "morje", "gora", "pot"],
+  "Kazakhstan": ["Сәлем", "рақмет", "дос", "күн", "жауын", "ит", "отбасы", "тас", "төре", "жол"],
+  "Switzerland": ["Hallo", "danke", "freund", "sonne", "regen", "hund", "familie", "see", "berg", "käse"],
+  "Portugal": ["Olá", "obrigado", "amigo", "sol", "chuva", "cão", "família", "praia", "montanha", "viagem"],
+  "Estonia": ["Tere", "aitäh", "sõber", "päike", "vihm", "koer", "pere", "rand", "mets", "järv"],
+  "Lithuania": ["Labas", "ačiū", "draugas", "saule", "lietus", "šuo", "šeima", "paplūdimys", "kalnas", "miškas"],
+  "Latvia": ["Sveiki", "paldies", "draugs", "saulriets", "lietus", "kaķis", "dzimta", "jūra", "pludmale", "celš"],
+  "Poland": ["Cześć", "dziękuję", "przyjaciel", "słońce", "deszcz", "pies", "rodzina", "morze", "góra", "podróż"],
+  "Germany": ["Hallo", "danke", "freund", "sonne", "regen", "hund", "familie", "strand", "essen", "glück"],
+  "Turkey": ["Merhaba", "teşekkür ederim", "arkadaş", "güneş", "yağmur", "köpek", "aile", "deniz", "dağ", "yol"]
+};
+        answer="";
+
+        // Function to get a random translation
+        function getRandomTranslation() {
+            // Get all keys (countries) from the dictionary
+            const countries = Object.keys(wordTranslations);
+
+            // Choose a random country from the list
+            const randomCountry = countries[Math.floor(Math.random() * countries.length)];
+            
+
+            // Get the translation corresponding to the random country
+            const translation = wordTranslations[randomCountry];
+            const word = translation[Math.floor(Math.random() * translation.length)];
+            // Display the translation
+            document.getElementById("languagecontainer").textContent = `"${word}"`
+            answer = randomCountry
+        }
+        
+        getRandomTranslation();
+        
+
+        // Access the form by its ID
+        const form = document.getElementById("countryForm");
+
+        // Add event listener for form submission
+        form.addEventListener("submit", function(event) {
+            // Prevent the default form submission behavior
+            event.preventDefault();
+            
+            // Get the value entered in the country input field
+            const countryValue = document.getElementById("country").value;
+
+            // Assign the value to the usercountry variable
+            usercountry = countryValue;
+
+            // Check if the user's country is Romania and display an alert
+            if (usercountry === answer) {
+                alert("User's country is Right");
+                getRandomTranslation();
+            } else {
+                alert(`"User's country is not Right it was ${answer}"`);
+                getRandomTranslation();
+            }
+            
+        });
+    </script>
+</body>
+</html>
