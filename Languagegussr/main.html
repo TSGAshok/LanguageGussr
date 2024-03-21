@@ -15,34 +15,23 @@
             margin-left:455px;
             background-color: rgb(224, 238, 233);
             align-items: center;
-            text-align: center;
-            
+            text-align: center;         
             font-family:'Courier New', Courier, monospace;
             font-size: 50px;
-
-
         }
         #countryForm {
             margin-top: 15px;
             margin-left:555px;
         }
-
-        
-
     </style>
 </head>
 <body>
-
-    <div id="languagecontainer">
-        
-        
-    </div>
+    <div id="languagecontainer"></div>
     <form id="countryForm">
         <h3 for="country">Which Country is this language from?</h3><br>
         <input type="text" style="margin-left:70px;" id="country" name="country" value=""><br>
         <input type="submit" style="margin-left:115px;"  value="Submit">
     </form> 
-</center>
     <script>
         // Define a variable to hold the user's country
         let usercountry = "";
@@ -73,42 +62,20 @@
   "Turkey": ["Merhaba", "teşekkür ederim", "arkadaş", "güneş", "yağmur", "köpek", "aile", "deniz", "dağ", "yol"]
 };
         answer="";
-
-        // Function to get a random translation
         function getRandomTranslation() {
-            // Get all keys (countries) from the dictionary
             const countries = Object.keys(wordTranslations);
-
-            // Choose a random country from the list
             const randomCountry = countries[Math.floor(Math.random() * countries.length)];
-            
-
-            // Get the translation corresponding to the random country
             const translation = wordTranslations[randomCountry];
             const word = translation[Math.floor(Math.random() * translation.length)];
-            // Display the translation
             document.getElementById("languagecontainer").textContent = `"${word}"`
             answer = randomCountry
-        }
-        
+        }    
         getRandomTranslation();
-        
-
-        // Access the form by its ID
         const form = document.getElementById("countryForm");
-
-        // Add event listener for form submission
         form.addEventListener("submit", function(event) {
-            // Prevent the default form submission behavior
             event.preventDefault();
-            
-            // Get the value entered in the country input field
             const countryValue = document.getElementById("country").value;
-
-            // Assign the value to the usercountry variable
             usercountry = countryValue;
-
-            // Check if the user's country is Romania and display an alert
             if (usercountry === answer) {
                 alert("User's country is Right");
                 getRandomTranslation();
