@@ -1,89 +1,359 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Guessing Game</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            background-color: rgb(26, 24, 24);
-        }
-        h3 {
-            color:white;
-        }
-        #languagecontainer {
-            width:500px;
-            height:200px;
-            margin-top: 245px;
-            margin-left:455px;
-            background-color: rgb(224, 238, 233);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            text-align: center;         
-            font-family:'Courier New', Courier, monospace;
-            font-size: 50px;
+            justify-content: center;
+            padding: 20px;
         }
-        #countryForm {
+
+        .game-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            transition: transform 0.3s ease;
+        }
+
+        .game-container:hover {
+            transform: translateY(-5px);
+        }
+
+        .title {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+        }
+
+        .word-display {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 40px 30px;
+            border-radius: 15px;
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 30px;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(240, 147, 251, 0.3);
+            font-family: 'Courier New', monospace;
+        }
+
+        .form-container {
+            margin-top: 20px;
+        }
+
+        .form-label {
+            color: #333;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .country-input {
+            width: 100%;
+            max-width: 300px;
+            padding: 15px 20px;
+            font-size: 1.1em;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            outline: none;
+            transition: border-color 0.3s ease;
+            background: #f9f9f9;
+        }
+
+        .country-input:focus {
+            border-color: #667eea;
+            background: white;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .score-display {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .score-text {
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .score-number {
+            font-size: 1.5em;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .hint-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-left: 10px;
+            transition: background 0.3s ease;
+        }
+
+        .hint-btn:hover {
+            background: #218838;
+        }
+
+        .hint-display {
+            background: #e8f5e8;
+            color: #155724;
+            padding: 10px 15px;
+            border-radius: 8px;
             margin-top: 15px;
-            margin-left:555px;
+            font-style: italic;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .game-container {
+                padding: 30px 20px;
+            }
+            
+            .title {
+                font-size: 2em;
+            }
+            
+            .word-display {
+                font-size: 2.5em;
+                padding: 30px 20px;
+            }
+            
+            .score-display {
+                position: static;
+                margin-bottom: 20px;
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
-    <div id="languagecontainer"></div>
-    <form id="countryForm">
-        <h3 for="country">Which Country is this language from?</h3><br>
-        <input type="text" style="margin-left:70px;" id="country" name="country" value=""><br>
-        <input type="submit" style="margin-left:115px;"  value="Submit">
-    </form> 
+    <div class="score-display">
+        <div class="score-text">Score</div>
+        <div class="score-number" id="scoreDisplay">0</div>
+    </div>
+
+    <div class="game-container">
+        <h1 class="title">Language Guessing Game</h1>
+        <p class="subtitle">Can you identify which country this word is from?</p>
+        
+        <div class="word-display" id="languagecontainer">Loading...</div>
+        
+        <form class="form-container" id="countryForm">
+            <label class="form-label" for="country">Which country is this language from?</label>
+            <div class="input-group">
+                <input type="text" class="country-input" id="country" name="country" placeholder="Enter country name..." autocomplete="off">
+                <button type="button" class="hint-btn" id="hintBtn">💡 Hint</button>
+            </div>
+            <div class="hint-display" id="hintDisplay"></div>
+            <button type="submit" class="submit-btn">Submit Answer</button>
+        </form>
+    </div>
+
     <script>
-        // Define a variable to hold the user's country
-        let usercountry = "";
+        let score = 0;
+        let currentAnswer = "";
+        let hintUsed = false;
+
         const wordTranslations = {
-  "France": ["Bonjour", "pluie", "sud", "nord", "ville", "voiture", "merci", "chien", "famille", "soleil"],
-  "Spain": ["Hola", "tráfico", "calle", "dirección", "ciudad", "playa", "gracias", "perro", "amigo", "sol"],
-  "Russia": ["Привет", "Спасибо", "Пожалуйста", "Да", "Нет", "молоко", "собака", "дом", "рука", "любовь"],
-  "Italy": ["montagna", "albero", "Locale", "traffico", "cane", "grazie", "famiglia", "sole", "mare", "pioggia"],
-  "Bulgaria":["планина", "точно", "посока", "наляво", "куче", "благодаря", "семейство", "плаж", "слънце", "дъжд"],
-  "Sweden": ["Hej", "tack", "vän", "sol", "regn", "sjö", "hus", "sjö", "skog", "resa"],
-  "Finland": ["Hei", "kiitos", "ystävä", "aurinko", "sade", "koira", "talvi", "järvi", "metsä", "kieli"],
-  "Norway": ["Hei", "takk", "venn", "gå", "menn", "katt", "innsjø", "fjell", "hav", "natur"],
-  "Denmark": ["løb", "tak", "ven", "sol", "regn", "hund", "familie", "strand", "mad", "glæde"],
-  "Netherlands": ["Hallo", "dank je", "vriend", "zon", "regen", "hond", "familie", "strand", "fiets", "boot"],
-  "Romania": ["Salut", "mulțumesc", "prieten", "soare", "ploaie", "câine", "familie", "munte", "lac", "drum"],
-  "Slovakia": ["Ahoj", "ďakujem", "priateľ", "slnečný", "dážď", "pes", "rodina", "horský", "jazero", "cesta"],
-  "Croatia": ["Bok", "hvala", "prijatelj", "sunce", "kiša", "pas", "obitelj", "more", "planina", "voće"],
-  "Greece": ["Γεια σου", "ευχαριστώ", "φίλος", "ηλιος", "βροχή", "σκύλος", "οικογένεια", "θάλασσα", "βουνό", "ταξίδι"],
-  "Slovenia": ["Živjo", "hvala", "prijatelj", "sonce", "dež", "pes", "družina", "morje", "gora", "pot"],
-  "Kazakhstan": ["Сәлем", "рақмет", "дос", "күн", "жауын", "ит", "отбасы", "тас", "төре", "жол"],
-  "Switzerland": ["Hallo", "danke", "freund", "sonne", "regen", "hund", "familie", "see", "berg", "käse"],
-  "Portugal": ["Olá", "obrigado", "amigo", "sol", "chuva", "cão", "família", "praia", "montanha", "viagem"],
-  "Estonia": ["Tere", "aitäh", "sõber", "päike", "vihm", "koer", "pere", "rand", "mets", "järv"],
-  "Lithuania": ["Labas", "ačiū", "draugas", "saule", "lietus", "šuo", "šeima", "paplūdimys", "kalnas", "miškas"],
-  "Latvia": ["Sveiki", "paldies", "draugs", "saulriets", "lietus", "kaķis", "dzimta", "jūra", "pludmale", "celš"],
-  "Poland": ["Cześć", "dziękuję", "przyjaciel", "słońce", "deszcz", "pies", "rodzina", "morze", "góra", "podróż"],
-  "Germany": ["Hallo", "danke", "freund", "sonne", "regen", "hund", "familie", "strand", "essen", "glück"],
-  "Turkey": ["Merhaba", "teşekkür ederim", "arkadaş", "güneş", "yağmur", "köpek", "aile", "deniz", "dağ", "yol"]
-};
-        answer="";
+            "France": ["Bonjour", "pluie", "sud", "nord", "ville", "voiture", "merci", "chien", "famille", "soleil", "eau", "rouge", "blanc", "bleu", "maison"],
+            "Spain": ["Hola", "tráfico", "calle", "dirección", "ciudad", "playa", "gracias", "perro", "amigo", "sol", "agua", "rojo", "blanco", "azul", "casa"],
+            "Russia": ["Привет", "Спасибо", "Пожалуйста", "Да", "Нет", "молоко", "собака", "дом", "рука", "любовь", "вода", "красный", "белый", "синий", "мать"],
+            "Italy": ["montagna", "albero", "locale", "traffico", "cane", "grazie", "famiglia", "sole", "mare", "pioggia", "acqua", "rosso", "bianco", "blu", "casa"],
+            "Bulgaria": ["планина", "точно", "посока", "наляво", "куче", "благодаря", "семейство", "плаж", "слънце", "дъжд", "вода", "червен", "бял", "син", "къща"],
+            "Sweden": ["Hej", "tack", "vän", "sol", "regn", "sjö", "hus", "skog", "resa", "kärlek", "vatten", "röd", "vit", "blå", "familj"],
+            "Finland": ["Hei", "kiitos", "ystävä", "aurinko", "sade", "koira", "talvi", "järvi", "metsä", "kieli", "vesi", "punainen", "valkoinen", "sininen", "perhe"],
+            "Norway": ["Hei", "takk", "venn", "gå", "mann", "katt", "innsjø", "fjell", "hav", "natur", "vann", "rød", "hvit", "blå", "familie"],
+            "Denmark": ["løb", "tak", "ven", "sol", "regn", "hund", "familie", "strand", "mad", "glæde", "vand", "rød", "hvid", "blå", "hus"],
+            "Netherlands": ["Hallo", "dank je", "vriend", "zon", "regen", "hond", "familie", "strand", "fiets", "boot", "water", "rood", "wit", "blauw", "huis"],
+            "Romania": ["Salut", "mulțumesc", "prieten", "soare", "ploaie", "câine", "familie", "munte", "lac", "drum", "apă", "roșu", "alb", "albastru", "casă"],
+            "Slovakia": ["Ahoj", "ďakujem", "priateľ", "slnko", "dážď", "pes", "rodina", "hora", "jazero", "cesta", "voda", "červený", "biely", "modrý", "dom"],
+            "Croatia": ["Bok", "hvala", "prijatelj", "sunce", "kiša", "pas", "obitelj", "more", "planina", "voće", "voda", "crvena", "bijela", "plava", "kuća"],
+            "Greece": ["Γεια σου", "ευχαριστώ", "φίλος", "ήλιος", "βροχή", "σκύλος", "οικογένεια", "θάλασσα", "βουνό", "ταξίδι", "νερό", "κόκκινο", "άσπρο", "μπλε", "σπίτι"],
+            "Slovenia": ["Živjo", "hvala", "prijatelj", "sonce", "dež", "pes", "družina", "morje", "gora", "pot", "voda", "rdeča", "bela", "modra", "hiša"],
+            "Kazakhstan": ["Сәлем", "рақмет", "дос", "күн", "жауын", "ит", "отбасы", "тас", "төре", "жол", "су", "қызыл", "ақ", "көк", "үй"],
+            "Switzerland": ["Hallo", "danke", "freund", "sonne", "regen", "hund", "familie", "see", "berg", "käse", "wasser", "rot", "weiss", "blau", "haus"],
+            "Portugal": ["Olá", "obrigado", "amigo", "sol", "chuva", "cão", "família", "praia", "montanha", "viagem", "água", "vermelho", "branco", "azul", "casa"],
+            "Estonia": ["Tere", "aitäh", "sõber", "päike", "vihm", "koer", "pere", "rand", "mets", "järv", "vesi", "punane", "valge", "sinine", "maja"],
+            "Lithuania": ["Labas", "ačiū", "draugas", "saulė", "lietus", "šuo", "šeima", "paplūdimys", "kalnas", "miškas", "vanduo", "raudonas", "baltas", "mėlynas", "namas"],
+            "Latvia": ["Sveiki", "paldies", "draugs", "saule", "lietus", "suns", "ģimene", "jūra", "pludmale", "ceļš", "ūdens", "sarkans", "balts", "zils", "māja"],
+            "Poland": ["Cześć", "dziękuję", "przyjaciel", "słońce", "deszcz", "pies", "rodzina", "morze", "góra", "podróż", "woda", "czerwony", "biały", "niebieski", "dom"],
+            "Germany": ["Hallo", "danke", "freund", "sonne", "regen", "hund", "familie", "strand", "essen", "glück", "wasser", "rot", "weiß", "blau", "haus"],
+            "Turkey": ["Merhaba", "teşekkür ederim", "arkadaş", "güneş", "yağmur", "köpek", "aile", "deniz", "dağ", "yol", "su", "kırmızı", "beyaz", "mavi", "ev"],
+            "Japan": ["こんにちは", "ありがとう", "友達", "太陽", "雨", "犬", "家族", "海", "山", "旅行", "水", "赤", "白", "青", "家"],
+            "China": ["你好", "谢谢", "朋友", "太阳", "雨", "狗", "家庭", "海", "山", "旅行", "水", "红色", "白色", "蓝色", "家"],
+            "Korea": ["안녕하세요", "감사합니다", "친구", "태양", "비", "개", "가족", "바다", "산", "여행", "물", "빨간색", "흰색", "파란색", "집"],
+            "India": ["नमस्ते", "धन्यवाद", "मित्र", "सूर्य", "बारिश", "कुत्ता", "परिवार", "समुद्र", "पहाड़", "यात्रा", "पानी", "लाल", "सफ़ेद", "नीला", "घर"],
+            "Thailand": ["สวัสดี", "ขอบคุณ", "เพื่อน", "แสงแดด", "ฝน", "หมา", "ครอบครัว", "ทะเล", "ภูเขา", "การเดินทาง", "น้ำ", "สีแดง", "สีขาว", "สีน้ำเงิน", "บ้าน"],
+            "Vietnam": ["Xin chào", "Cám ơn", "Bạn bè", "Mặt trời", "Mưa", "Chó", "Gia đình", "Biển", "Núi", "Du lịch", "Nước", "Đỏ", "Trắng", "Xanh", "Nhà"],
+            "Arabic": ["مرحبا", "شكرا", "صديق", "شمس", "مطر", "كلب", "عائلة", "بحر", "جبل", "سفر", "ماء", "أحمر", "أبيض", "أزرق", "بيت"],
+            "Hebrew": ["שלום", "תודה", "חבר", "שמש", "גשם", "כלב", "משפחה", "ים", "הר", "נסיעה", "מים", "אדום", "לבן", "כחול", "בית"],
+            "Hungary": ["Szia", "köszönöm", "barát", "nap", "eső", "kutya", "család", "tenger", "hegy", "utazás", "víz", "piros", "fehér", "kék", "ház"],
+            "Czech": ["Ahoj", "děkuji", "přítel", "slunce", "déšť", "pes", "rodina", "moře", "hora", "cesta", "voda", "červená", "bílá", "modrá", "dům"],
+            "Ukraine": ["Привіт", "Дякую", "Друг", "Сонце", "Дощ", "Собака", "Сім'я", "Море", "Гора", "Подорож", "Вода", "Червоний", "Білий", "Синій", "Дім"],
+            "Iran": ["سلام", "متشکرم", "دوست", "خورشید", "باران", "سگ", "خانواده", "دریا", "کوه", "سفر", "آب", "قرمز", "سفید", "آبی", "خانه"],
+            "Indonesia": ["Halo", "Terima kasih", "Teman", "Matahari", "Hujan", "Anjing", "Keluarga", "Laut", "Gunung", "Perjalanan", "Air", "Merah", "Putih", "Biru", "Rumah"]
+        };
+
+        const countryHints = {
+            "France": "Famous for the Eiffel Tower and croissants",
+            "Spain": "Home to flamenco dancing and paella",
+            "Russia": "The largest country in the world",
+            "Italy": "Shaped like a boot, famous for pasta and pizza",
+            "Bulgaria": "Located in the Balkans, uses Cyrillic script",
+            "Sweden": "Land of IKEA and ABBA",
+            "Finland": "Land of a thousand lakes and saunas",
+            "Norway": "Famous for fjords and northern lights",
+            "Denmark": "Home to LEGO and Hans Christian Andersen",
+            "Netherlands": "Famous for tulips, windmills, and canals",
+            "Romania": "Home to Dracula's castle in Transylvania",
+            "Slovakia": "Small country in Central Europe",
+            "Croatia": "Adriatic coast with beautiful islands",
+            "Greece": "Birthplace of democracy and the Olympics",
+            "Slovenia": "Small Alpine country near Italy",
+            "Kazakhstan": "Largest landlocked country in the world",
+            "Switzerland": "Famous for chocolate, watches, and Alps",
+            "Portugal": "Western European country, birthplace of fado music",
+            "Estonia": "Small Baltic country, very digital",
+            "Lithuania": "Baltic country, once part of Soviet Union",
+            "Latvia": "Baltic country between Estonia and Lithuania",
+            "Poland": "Central European country, famous for pierogi",
+            "Germany": "Central European economic powerhouse",
+            "Turkey": "Transcontinental country bridging Europe and Asia",
+            "Japan": "Island nation famous for sushi and anime",
+            "China": "Most populous country in the world",
+            "Korea": "Divided peninsula, famous for K-pop",
+            "India": "Second most populous country, famous for curry",
+            "Thailand": "Southeast Asian country, former Siam",
+            "Vietnam": "Southeast Asian country, famous for pho",
+            "Arabic": "Language spoken across the Middle East and North Africa",
+            "Hebrew": "Ancient language, official language of Israel",
+            "Hungary": "Central European country, unique language",
+            "Czech": "Central European country, famous for beer",
+            "Ukraine": "Eastern European country, largest in Europe",
+            "Iran": "Middle Eastern country, former Persia",
+            "Indonesia": "Southeast Asian archipelago with thousands of islands"
+        };
+
         function getRandomTranslation() {
             const countries = Object.keys(wordTranslations);
             const randomCountry = countries[Math.floor(Math.random() * countries.length)];
             const translation = wordTranslations[randomCountry];
             const word = translation[Math.floor(Math.random() * translation.length)];
-            document.getElementById("languagecontainer").textContent = `"${word}"`
-            answer = randomCountry
-        }    
+            
+            document.getElementById("languagecontainer").textContent = `"${word}"`;
+            currentAnswer = randomCountry;
+            hintUsed = false;
+            document.getElementById("hintDisplay").style.display = "none";
+            document.getElementById("country").value = "";
+            document.getElementById("country").focus();
+        }
+
+        function showHint() {
+            if (!hintUsed) {
+                const hint = countryHints[currentAnswer];
+                document.getElementById("hintDisplay").textContent = hint;
+                document.getElementById("hintDisplay").style.display = "block";
+                hintUsed = true;
+            }
+        }
+
+        function updateScore() {
+            document.getElementById("scoreDisplay").textContent = score;
+        }
+
+        // Initialize game
         getRandomTranslation();
-        const form = document.getElementById("countryForm");
-        form.addEventListener("submit", function(event) {
+        updateScore();
+
+        // Event listeners
+        document.getElementById("countryForm").addEventListener("submit", function(event) {
             event.preventDefault();
-            const countryValue = document.getElementById("country").value;
-            usercountry = countryValue;
-            if (usercountry === answer) {
-                alert("User's country is Right");
+            const countryValue = document.getElementById("country").value.trim();
+            
+            if (countryValue.toLowerCase() === currentAnswer.toLowerCase()) {
+                const points = hintUsed ? 1 : 2;
+                score += points;
+                alert(`🎉 Correct! You earned ${points} point${points > 1 ? 's' : ''}!`);
+                updateScore();
                 getRandomTranslation();
             } else {
-                alert(`"User's country is not Right it was ${answer}"`);
+                alert(`❌ Incorrect! The answer was ${currentAnswer}. Try the next one!`);
                 getRandomTranslation();
             }
-            
+        });
+
+        document.getElementById("hintBtn").addEventListener("click", showHint);
+
+        // Allow Enter key to submit
+        document.getElementById("country").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                document.getElementById("countryForm").dispatchEvent(new Event('submit'));
+            }
         });
     </script>
 </body>
